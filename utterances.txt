@@ -1,0 +1,8 @@
+Open {Direction}
+Enter enter the house
+Cancel cancel
+Stop stop
+Options What are my options
+Options Repeat the options
+Options What are the options
+Options Can you repeat the options

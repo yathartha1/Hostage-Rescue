@@ -1,0 +1,28 @@
+{
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "Direction",
+          "type": "LIST_OF_DIRECTIONS"
+        }
+      ],
+      "intent": "Open"
+    },
+    {
+      "intent": "Enter"
+    },
+    {
+      "intent": "Cancel"
+    },
+    {
+      "intent": "Options"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "Stop"
+    }
+  ]
+}
