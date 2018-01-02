@@ -77,48 +77,47 @@ def intent_router(event, context):
         return game_intent(event, context)
     if intent == "Open":
         return open1(event, context)
-    if intent == "Cancel":
+    if intent == "AMAZON.CancelIntent":
         return cancel_intent(event, context)
-    if intent == "Stop":
-        return stop_intent()
+    if intent == "AMAZON.StopIntent":
+        return cancel_intent(event, context)
     if intent == "AMAZON.HelpIntent":
         return help_intent(event, context)
-    else:
-        return error(event, context)
+    return error(event, context)
  
  
 # --------------- Functions that control the skill's behavior ------------------
  
  
-def get_welcome_response(title, body):
+def get_welcome_response(title, body ,body1):
  
     speechlet = {}
     speechlet['outputSpeech'] = build_PlainSpeech(body)
-    speechlet['card'] = build_SimpleCard(title, body)
+    speechlet['card'] = build_SimpleCard(title, body1)
     speechlet['shouldEndSession'] = False
     return build_response(speechlet)
 
-def statement(title, body):
+def statement(title, body ,body1):
  
     speechlet = {}
     speechlet['outputSpeech'] = build_PlainSpeech(body)
-    speechlet['card'] = build_SimpleCard(title, body)
+    speechlet['card'] = build_SimpleCard(title, body1)
     speechlet['shouldEndSession'] = False
     return build_response(speechlet)
 
-def statement1(title, body):
+def statement1(title, body, body1):
  
     speechlet = {}
     speechlet['outputSpeech'] = build_SSML(body)
-    speechlet['card'] = build_SimpleCard(title, body)
+    speechlet['card'] = build_SimpleCard(title, body1)
     speechlet['shouldEndSession'] = False
     return build_response(speechlet)
 
-def end(title, body):
+def end(title, body, body1):
     global board
     speechlet = {}
     speechlet['outputSpeech'] = build_SSML(body)
-    speechlet['card'] = build_SimpleCard(title, body)
+    speechlet['card'] = build_SimpleCard(title, body1)
     speechlet['shouldEndSession'] = True
     return build_response(speechlet)
 
@@ -132,11 +131,11 @@ def welcome(event, context):
         "It is your job to find that hostage and rescue her. "
     wel2="You have reached the house. " \
         "Just say enter the house. "
-    return statement1("welcome", wel1+sound+wel2)
+    return statement1("welcome", wel1+sound+wel2, wel1+wel2)
     
 def error(event, context):
     er="I could not get that, please say it again."
-    return statement("error",er)
+    return statement("error",er,er)
  
 def game_intent(event, context):
     global sound
@@ -177,22 +176,18 @@ def game_intent(event, context):
             "There is pin drop silence. " \
             "There are two doorways, one in the front and one to your left. " \
             "Just select a direction to enter. " 
-    return statement1("game_intent", game)
+    return statement1("enter", game, game)
 
-def stop_intent():
-    term = "The game has stopped. " \
-            "See you later. "
-    return end("stop", term)
     
 def cancel_intent(event, context):
     term = "The game has stopped. " \
             "See you later. "
-    return end("stop", term)
+    return end("stop", term, term)
     
 def help_intent(event, context):
     term = "To select a doorway, just say the direction of the doorway like front, left and right. " \
             "If you want to exit the game, just say stop or cancel " 
-    return statement("help", term) 
+    return statement("help", term, term) 
 
 def open1(event, context):
     global counter
@@ -219,14 +214,14 @@ def move1(pos):
             term2="There is a doorway in your front. " \
                  "Just select the direction to enter. "
             counter=counter+1
-            return statement1("left", term1+sound+term2)
+            return statement1("left", term1+sound+term2, term1+term2)
         else:
             term="You have entered the "+types.get(1)+". " \
                  "There is no sound around. " \
                  "There is a doorway in your front. " \
                  "Just select the direction to enter. "
             counter=counter+1
-            return statement1("left", term)
+            return statement1("left", term, term)
     elif pos == 'front':
         value=room[4]
         if room[8].getContents()=="t1":
@@ -236,18 +231,18 @@ def move1(pos):
             term2="There are two doorways, one in the front and one to your left. " \
                   "Just select the direction to enter. "
             counter=counter+1
-            return statement1("front", term1+sound+term2)
+            return statement1("front", term1+sound+term2, term1+term2)
         else:
             term="You have entered the "+types.get(4)+". " \
                  "There is no sound around. " \
                  "There are two doorways, one in the front and one to your left. " \
                  "Just select the direction to enter. "
             counter=counter+1
-            return statement1("front", term)
+            return statement1("front", term, term)
     else:
         term="There is no doorway there, please select a valid direction. "
         counter=0
-        return statement1("wrong direction", term)
+        return statement1("wrong direction", term, term)
 
 def move(pos):
     global value
@@ -321,7 +316,7 @@ def move(pos):
                 if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                     char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                             "Just select a direction to enter. "
-                return statement1("left", char1+sound+char4+char3+sound1+char2)  
+                return statement1("left", char1+sound+char4+char3+sound1+char2, char1+char4+char3+char2)  
             elif health==1:
                 health=health-1
                 char1="You have entered the "+types.get(int(r1))+". " \
@@ -329,7 +324,7 @@ def move(pos):
                 sound1="<audio src='https://s3.amazonaws.com/hostagerescuesound/Shoot.mp3'/>"
                 char2="But unfortunately you died. "\
                       "The game is over. "
-                return end("Lost", char1+sound+char2)
+                return end("Lost", char1+sound+char2, char1+char2)
         elif value.getContents()=="t2":
             value.updateValue(str(r2))
             if health==2:
@@ -380,7 +375,7 @@ def move(pos):
                 if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                     char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                             "Just select a direction to enter. "
-                return statement1("left", char1+sound+char4+char3+sound1+char2)
+                return statement1("left", char1+sound+char4+char3+sound1+char2, char1+char4+char3+char2)
             elif health==1:
                 health=health-1
                 char1="You have entered the "+types.get(int(r2))+". " \
@@ -388,7 +383,7 @@ def move(pos):
                 sound1="<audio src='https://s3.amazonaws.com/hostagerescuesound/Shoot.mp3'/>"
                 char2="But unfortunately you died. "\
                       "The game is over. "
-                return end("Lost", char1+sound+char2)  
+                return end("Lost", char1+sound+char2, char1+char2)  
         elif value.getContents()=="h":
             char1="You have entered the "+types.get(int(r3))+". " \
                   "You found the hostage. "\
@@ -396,7 +391,7 @@ def move(pos):
                   "You untied her and rescued her through the backdoor. " \
                   "Congratulations, You won the game ."
             sound="<audio src='https://s3.amazonaws.com/hostagerescuesound/Win.mp3'/>"
-            return end("Won", char1+sound)
+            return end("Won", char1+sound, char1)
         else:
             char1="You have entered the "+types.get(int(value.getContents()))+". "
             if value.getLeft()!=None:
@@ -441,7 +436,7 @@ def move(pos):
             if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                 char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                         "Just select a direction to enter. "
-            return statement1("left", char1+sound1+char3+char2)        
+            return statement1("left", char1+sound1+char3+char2, char1+char3+char2)        
 
     elif pos == 'front' and value.getFront()!=None:
         value=value.getFront()
@@ -495,7 +490,7 @@ def move(pos):
                 if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                     char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                             "Just select a direction to enter. "
-                return statement1("left", char1+sound+char4+char3+sound1+char2)  
+                return statement1("left", char1+sound+char4+char3+sound1+char2, char1+char4+char3+char2)  
             elif health==1:
                 health=health-1
                 char1="You have entered the "+types.get(int(r1))+". " \
@@ -503,7 +498,7 @@ def move(pos):
                 sound1="<audio src='https://s3.amazonaws.com/hostagerescuesound/Shoot.mp3'/>"
                 char2="But unfortunately you died. "\
                       "The game is over. "
-                return end("Lost", char1+sound1+char2)
+                return end("Lost", char1+sound1+char2, char1+char2)
         elif value.getContents()=="t2":
             value.updateValue(str(r2))
             if health==2:
@@ -554,7 +549,7 @@ def move(pos):
                 if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                     char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                             "Just select a direction to enter. "
-                return statement1("left", char1+sound+char4+char3+sound1+char2)
+                return statement1("left", char1+sound+char4+char3+sound1+char2, char1+char4+char3+char2)
             elif health==1:
                 health=health-1
                 char1="You have entered the "+types.get(int(r2))+". " \
@@ -562,7 +557,7 @@ def move(pos):
                 sound1="<audio src='https://s3.amazonaws.com/hostagerescuesound/Shoot.mp3'/>"
                 char2="But unfortunately you died. "\
                       "The game is over. "
-                return end("Lost", char1+sound1+char2)  
+                return end("Lost", char1+sound1+char2, char1+char2)  
         elif value.getContents()=="h":
             char1="You have entered the "+types.get(int(r3))+". " \
                   "You found the hostage. "\
@@ -570,7 +565,7 @@ def move(pos):
                   "You untied her and rescued her through the backdoor. " \
                   "Congratulations, You won the game ."
             sound="<audio src='https://s3.amazonaws.com/hostagerescuesound/Win.mp3'/>"
-            return end("Won", char1+sound)
+            return end("Won", char1+sound, char1)
         else:
             char1="You have entered the "+types.get(int(value.getContents()))+". "
             if value.getLeft()!=None:
@@ -615,7 +610,7 @@ def move(pos):
             if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                 char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                         "Just select a direction to enter. "
-            return statement1("left", char1+sound1+char3+char2)
+            return statement1("left", char1+sound1+char3+char2, char1+char3+char2)
 
     elif pos == 'right' and value.getRight()!=None:
         value=value.getRight()
@@ -669,7 +664,7 @@ def move(pos):
                 if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                     char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                             "Just select a direction to enter. "
-                return statement1("left", char1+sound+char4+char3+sound1+char2)  
+                return statement1("left", char1+sound+char4+char3+sound1+char2, char1+char4+char3+char2)  
             elif health==1:
                 health=health-1
                 char1="You have entered the "+types.get(int(r1))+". " \
@@ -677,7 +672,7 @@ def move(pos):
                 sound1="<audio src='https://s3.amazonaws.com/hostagerescuesound/Shoot.mp3'/>"
                 char2="But unfortunately you died. "\
                       "The game is over. "
-                return end("Lost", char1+sound1+char2)
+                return end("Lost", char1+sound1+char2, char1+char2)
         elif value.getContents()=="t2":
             value.updateValue(str(r2))
             if health==2:
@@ -728,7 +723,7 @@ def move(pos):
                 if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                     char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                             "Just select a direction to enter. "
-                return statement1("left", char1+sound+char4+char3+sound1+char2)
+                return statement1("left", char1+sound+char4+char3+sound1+char2, char1+char4+char3+char2)
             elif health==1:
                 health=health-1
                 char1="You have entered the "+types.get(int(r2))+". " \
@@ -736,7 +731,7 @@ def move(pos):
                 sound1="<audio src='https://s3.amazonaws.com/hostagerescuesound/Shoot.mp3'/>"
                 char2="But unfortunately you died. "\
                       "The game is over. "
-                return end("Lost", char1+sound1+char2)  
+                return end("Lost", char1+sound1+char2, char1+char2)  
         elif value.getContents()=="h":
             char1="You have entered the "+types.get(int(r3))+". " \
                   "You found the hostage. "\
@@ -744,7 +739,7 @@ def move(pos):
                   "You untied her and rescued her through the backdoor. " \
                   "Congratulations, You won the game ."
             sound="<audio src='https://s3.amazonaws.com/hostagerescuesound/Win.mp3'/>"
-            return end("Won", char1+sound)
+            return end("Won", char1+sound, char1)
         else:
             char1="You have entered the "+types.get(int(value.getContents()))+". "
             if value.getLeft()!=None:
@@ -789,10 +784,10 @@ def move(pos):
             if doorwayright==1 and doorwayfront==1 and doorwayleft==1:
                 char2="There are three doorways, one to your left, one to your right and one in front of you. "\
                         "Just select a direction to enter. "
-            return statement1("left", char1+sound1+char3+char2)
+            return statement1("left", char1+sound1+char3+char2, char1+char3+char2)
     else:
         term="There is no doorway there, please select a valid direction. "
-        return statement1("wrong direction", term)
+        return statement1("wrong direction", term, term)
 
 def checkleft():
     global value

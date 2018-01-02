@@ -13,16 +13,13 @@
       "intent": "Enter"
     },
     {
-      "intent": "Cancel"
-    },
-    {
-      "intent": "Options"
+      "intent": "AMAZON.CancelIntent"
     },
     {
       "intent": "AMAZON.HelpIntent"
     },
     {
-      "intent": "Stop"
+      "intent": "AMAZON.StopIntent"
     }
   ]
 }
