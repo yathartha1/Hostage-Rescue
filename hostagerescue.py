@@ -63,6 +63,8 @@ def lambda_handler(event, context):
         return on_launch(event,context)
     elif event['request']['type'] == "IntentRequest":
         return intent_router(event, context)
+    else: 
+        return error(event, context)
 
  
 def on_launch(event, context):
@@ -83,7 +85,8 @@ def intent_router(event, context):
         return cancel_intent(event, context)
     if intent == "AMAZON.HelpIntent":
         return help_intent(event, context)
-    return error(event, context)
+    else:
+        return error(event, context)
  
  
 # --------------- Functions that control the skill's behavior ------------------
@@ -211,14 +214,14 @@ def move1(pos):
             sound="<audio src='https://s3.amazonaws.com/hostagerescuesound/Footsteps.mp3'/>"
             term1="You have entered the "+types.get(1)+". " \
                  "You can hear some sound from the front room. "
-            term2="There is a doorway in your front. " \
+            term2="There are two doorways, one in the front and one to your right. " \
                  "Just select the direction to enter. "
             counter=counter+1
             return statement1("left", term1+sound+term2, term1+term2)
         else:
             term="You have entered the "+types.get(1)+". " \
                  "There is no sound around. " \
-                 "There is a doorway in your front. " \
+                 "There are two doorways, one in the front and one to your right. " \
                  "Just select the direction to enter. "
             counter=counter+1
             return statement1("left", term, term)
