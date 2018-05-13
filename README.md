@@ -7,6 +7,6 @@ This game is purely voice based with some aspect of decision making in it which 
 The documentation for the Alexa Skills Kit used in this project is available on the [Amazon Developer Portal.](https://developer.amazon.com/alexa-skills-kit)
 
 ## References
-Here are a few links that helped the project:
+Here are a few links that helped in the development:
 * [Getting Started](https://developer.amazon.com/docs/ask-overviews/build-skills-with-the-alexa-skills-kit.html)
 * [Developing an Alexa Skill as an AWS Lambda Function](https://developer.amazon.com/docs/custom-skills/host-a-custom-skill-as-an-aws-lambda-function.html)
