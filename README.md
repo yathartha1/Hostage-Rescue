@@ -10,4 +10,3 @@ The documentation for the Alexa Skills Kit used in this project is available on 
 Here are a few links that helped the project:
 * [Getting Started](https://developer.amazon.com/docs/ask-overviews/build-skills-with-the-alexa-skills-kit.html)
 * [Developing an Alexa Skill as an AWS Lambda Function](https://developer.amazon.com/docs/custom-skills/host-a-custom-skill-as-an-aws-lambda-function.html)
-* [How to make an Alexa Skill with Python](https://medium.com/@mr_rigden/how-to-make-an-alexa-skill-with-python-cb8a6a6c4d85)
